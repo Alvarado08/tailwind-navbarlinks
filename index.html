@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Mobile Menu</title>
+    <style>
+       html {
+            scroll-behavior: smooth;    
+        }
+
+       .active {
+        position: relative;
+        text-decoration: none;
+        transition: background-color 10s ease;
+        vertical-align: middle;
+        }
+
+        .notactive {
+            position: relative;
+        text-decoration: none;
+        transition: background-color 10s ease;
+        vertical-align: middle;
+        }
+
+       .active::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%; /* Adjust the width of the underline */
+        height: 2.9px;
+        background-color: rgb(231, 92, 115); /* Adjust the color of the underline */
+        transition: width 0.3s ease; /* Add transition for width property */
+        }
+
+        .notactive::after {
+            content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0%; /* Adjust the width of the underline */
+        height: 2.9px;
+        background-color: rgb(231, 92, 115); /* Adjust the color of the underline */
+        transition: width 0.3s ease; /* Add transition for width property */
+        }
+
+        .notactive:hover::after {
+            width: 50%;
+        }
+
+        @media screen and (max-width: 768px){
+            .active::after {
+            width: 4%;
+        }
+        .notactive:hover::after {
+            width: 4%;
+        }
+        }
+
+    </style>
+</head>
+<body class="bg-blue-500">
+    <nav id="navbar" class="sticky top-0 h-14 bg-white shadow p-4 md:flex md:items-center md:justify-between font-bold delay-100 duration-300">
+        <div class="flex items-center justify-between">
+            <span class="text-lg opacity-100">
+                <img class="inline h-4" src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" alt="">
+                Tailwind
+            </span>
+            <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="menu" class="icon icon-tabler icon-tabler-menu block md:hidden hover:cursor-pointer transition-all delay-100 duration-700" width="24" height="24"
+                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path id="menu-stroke1" d="M4 8l16 0"></path>
+                        <path id="menu-stroke2" d="M4 16l16 0"></path>
+                    </svg>
+                    </span>
+        </div>
+        <div id="menu-items" class="flex flex-col md:flex-row md:items-center md:space-x-2 space-x-0 md:space-y-0 space-y-3 z-[-1] md:z-auto md:static 
+        absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:text-left text-center md:opacity-100 opacity-0 transition-all ease-in-out delay-100 duration-500 top-[-400px]">
+            <a href="#home" class="mt-2 md:mt-0 active">Home</a>
+            <a href="#about" ">About</a>
+            <a href="#services" ">Services</a>
+            <a href="#contact" ">Contact</a>
+        </div>
+    </nav>
+    <section id="home" class="min-h-screen flex items-center justify-center">
+        <h1 class="text-4xl text-white">Home</h1>
+    </section>
+    <section id="about" class="min-h-screen flex items-center justify-center">
+        <h1 class="text-4xl text-white">About</h1>
+    </section>
+    <section id="services" class="min-h-screen flex items-center justify-center">
+        <h1 class="text-4xl text-white">Services</h1>
+    </section>
+    <section id="contact" class="min-h-screen flex items-center justify-center">
+        <h1 class="text-4xl text-white">Contact</h1>
+    </section>
+    <script>
+        const menuBtn = document.querySelector("#menu");
+        const stroke1 = document.querySelector("#menu-stroke1");
+        const stroke2 = document.querySelector("#menu-stroke2")
+        const menu = document.querySelector("#menu-items");
+        const navbar = document.querySelector("#navbar");
+        menuBtn.addEventListener("click",() =>{
+            if(menuBtn.classList.contains("icon-tabler-menu")){
+                menuBtn.classList.remove("icon-tabler-menu");
+                stroke1.setAttribute("d", "M18 6l-12 12");
+                stroke2.setAttribute("d", "M6 6l12 12");
+                menu.classList.remove("opacity-0");
+                menu.classList.add("top-[40px]","opacity-100");
+                navbar.classList.remove("shadow");
+            }else{
+                menuBtn.classList.add("icon-tabler-menu");
+                stroke1.setAttribute("d","M4 8l16 0");
+                stroke2.setAttribute("d","M4 16l16 0");
+                menu.classList.remove("top-[40px]","opacity-100");
+                menu.classList.add("opacity-0","top-[-400px]");
+                navbar.classList.add("shadow");
+            }
+        })
+        //Dynamic links according to page
+        // const active = window.location.pathname;
+        // const links = document.querySelectorAll("#menu-items a");
+        // links.forEach(link => {
+        //     if(link.href.includes(`${active}`)){
+        //         link.classList.add("active");
+        //     }
+        // })
+        //Dynamic Links according to section
+        function updateNav(){
+            const sections = document.querySelectorAll("section");
+            const links = document.querySelectorAll("#menu-items a");
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+
+                if(window.pageYOffset >= sectionTop - sectionHeight/2){
+                    const sectionId = section.getAttribute("id");
+                    links.forEach(link => {
+                        if(link.getAttribute("href") === `#${sectionId}`){
+                            link.classList.add("active");
+                            link.classList.remove("notactive");
+                        }else {
+                            link.classList.remove("active");
+                            link.classList.add("notactive");
+                        }
+                    })
+                }
+            })
+        }
+        window.addEventListener("scroll", updateNav);
+    </script>
+</body>
+</html>
